@@ -1,12 +1,8 @@
 language: go
 go:
 - 1.6
-before_install:
-  - go get github.com/mattn/goveralls
-  - go get golang.org/x/tools/cmd/cover
 
 script:
-- $HOME/gopath/bin/goveralls -service=travis-ci
 - env GOOS=linux GOARCH=amd64 go build -o kranen-linux-amd64 github.com/connctd/kranen
 - env GOOS=linux GOARCH=386 go build -o kranen-linux-386 github.com/connctd/kranen
 - env GOOS=linux GOARCH=arm GOARM=5 go build -o kranen-linux-arm github.com/connctd/kranen
