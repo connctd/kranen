@@ -124,6 +124,7 @@ func prepare() {
 }
 
 func TestSuccessfullCall(t *testing.T) {
+	t.Parallel()
 	prepare()
 	assert := assert.New(t)
 
@@ -133,6 +134,46 @@ func TestSuccessfullCall(t *testing.T) {
 	testHook(wrongTagPayload, "foobaz", assert, http.StatusBadRequest)
 	testHook(successPayload, "wrongapikey", assert, http.StatusNotFound)
 	testHook(wrongNamePayload, "foobaz", assert, http.StatusBadRequest)
+	testHook("", "foobaz", assert, http.StatusBadRequest)
+}
+
+func TestWrontTag(t *testing.T) {
+	t.Parallel()
+	prepare()
+	assert := assert.New(t)
+
+	execCommand = fakeExecCommand
+
+	testHook(wrongTagPayload, "foobaz", assert, http.StatusBadRequest)
+}
+
+func TestWrongApiKey(t *testing.T) {
+	t.Parallel()
+	prepare()
+	assert := assert.New(t)
+
+	execCommand = fakeExecCommand
+
+	testHook(successPayload, "wrongapikey", assert, http.StatusNotFound)
+}
+
+func TestWrongName(t *testing.T) {
+	t.Parallel()
+	prepare()
+	assert := assert.New(t)
+
+	execCommand = fakeExecCommand
+
+	testHook(wrongNamePayload, "foobaz", assert, http.StatusBadRequest)
+}
+
+func TestUnparseablePayload(t *testing.T) {
+	t.Parallel()
+	prepare()
+	assert := assert.New(t)
+
+	execCommand = fakeExecCommand
+
 	testHook("", "foobaz", assert, http.StatusBadRequest)
 }
 
