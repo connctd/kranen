@@ -7,6 +7,14 @@ This tool allows you to easily create callback endpoints for Docker Hub.
 Simply execute `kranen -config <path/to/config/yaml> [-httpAddress <http address string>]`.
 The httpAddress flag is optional and defaults to `:8080`.
 
+### TLS
+
+If you want to secure your callback endpoints with TLS you can simply specify the certificate and key with
+`kranen -cert <path/to/certificate.pem> -key <path/to/key.pem -config <path/to/config/yaml>`.
+Alternatively if you want to use self signed certificates anyway kranen can generate these for you upon
+startup with `kranen -tls -tlsHostname <hostname> -config <path/to/config/yaml>`. This generates the certificate
+cert.pem and the private key key.pem in the current working directory and uses these to setup the TLS server.
+
 ## Configuration
 
 A sample configuration looks like this:
