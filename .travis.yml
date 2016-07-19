@@ -1,4 +1,18 @@
 language: go
-
 go:
-  - 1.6
+- 1.6
+script:
+- env GOOS=linux GOARCH=amd64 go build -o kranen-linux-amd64 github.com/connctd/kranen
+- env GOOS=linux GOARCH=386 go build -o kranen-linux-386 github.com/connctd/kranen
+- env GOOS=linux GOARCH=arm GOARM=5 go build -o kranen-linux-arm ggithub.com/connctd/kranen
+deploy:
+  provider: releases
+  api_key:
+    secure: Ni4zAJh+6MJJm1K9kjMHuONKvdMzXWLJ8pHz78ayjuzopz9GT9v0IJMlOkta20pIeTJ+1eFPB1hwdBCrhBA4MDRU/I0/MYeKNcrJUc1mvZlVulFgkr7KI7+kIUvkcowksqqe4v0vr+7ohReZcNRORlj4Pw6P06n0Wgp1ZHV9Jx/MIfr0Z6pJdC4JCfkmBV0ziBp55sLbf37mRBd9TNCKMhfA9gjSgAv24LbYBPOkHV24EA7vxwTkLmED0jyuvTR6GK7XJ/BLTwW7wdIwuJ/b7Iw3rmKpn+x8ChcUQAAQUNvc6pW9ea0KP4w2mEgaBfpoRMzYL2MsRRY9xdeERNvMlsXA4MTyizBKy1BJdVAWsEEu5H74U/G3SGSTsFOI9wrTa9jz/SUfOk1mbOcKYhFZO7hT+YQO81sdeTaTwx7JLamPoGOiVCZ0XU0UTMeIaoMPHFaefEd0pPM9jrXKuYcm3diZuyCjIaGUG8G0LAfgTx/UIalQBXKt6+jJcSSSsE4isncJENulTSDZyoaCQIGQXL6hwc0m1Albsx+r/MlolwauddCMM6A6adOFDC9lpvovqajETPOmJgVhs44Qh4n4MZWP1wYB0tH7g11fJv20PiPCur1VJzErd9Xgv+8IS8ictFBEVS4bsgErefJhSfLcwvDMknOq03Y/GuoNECw+D3U=
+  file: 
+  - kranen-linux-amd64
+  - kranen-linux-386 
+  - kranen-linux-arm
+  on:
+    repo: connctd/kranen
+    tags: true
