@@ -86,6 +86,11 @@ func hook(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	dockerTag := payload.PushData.Tag
 	for _, repoConfig := range configs {
 		if repoConfig.Tag == dockerTag {
+			if payload.Repo.RepoName != repoConfig.Name {
+				log.Printf("Received call for repo %s but %s is configured as repo name, aborting", payload.Repo.RepoName, repoConfig.Name)
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
 			log.Printf("Received valid call for key %s", apiKey)
 			go executeScript(repoConfig, payload)
 			w.WriteHeader(http.StatusOK)
