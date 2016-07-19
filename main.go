@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
+	"github.com/kabukky/httpscerts"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
@@ -17,8 +18,12 @@ import (
 )
 
 var (
-	configFile  = flag.String("config", "", "Path to config.yml")
-	httpAddress = flag.String("httpAddress", ":8080", "HTTP port")
+	configFile      = flag.String("config", "", "Path to config.yml")
+	httpAddress     = flag.String("httpAddress", ":8080", "HTTP port")
+	certificatePath = flag.String("cert", "", "Path to the TLS certificate")
+	keyPath         = flag.String("key", "", "Path to the private key used for TLS")
+	autoTLS         = flag.Bool("tls", false, "Auto generate TLS key and certificate")
+	autoTLSHostname = flag.String("tlsHostname", "", "Hostname to use for the certificate")
 
 	configs []RepoConfig
 
@@ -40,8 +45,21 @@ func main() {
 	router := httprouter.New()
 	router.POST("/docker/:apikey", hook)
 
-	log.Printf("Now listening on %s", *httpAddress)
-	log.Fatal(http.ListenAndServe(*httpAddress, router))
+	if *autoTLS {
+		if *autoTLSHostname == "" {
+			log.Fatal("You need to specify a hostname for the generated certificate")
+		}
+		err = httpscerts.Generate("cert.pem", "key.pem", *autoTLSHostname)
+		*keyPath = "key.pem"
+		*certificatePath = "cert.pem"
+	}
+	if *keyPath != "" && *certificatePath != "" {
+		log.Printf("Now listening securely with HTTPS on %s", *httpAddress)
+		log.Fatal(http.ListenAndServeTLS(*httpAddress, *certificatePath, *keyPath, router))
+	} else {
+		log.Printf("Now listening with HTTP on %s", *httpAddress)
+		log.Fatal(http.ListenAndServe(*httpAddress, router))
+	}
 }
 
 func parseConfig() error {
