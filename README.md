@@ -1,4 +1,4 @@
-# kranen
+# kranen[![Build Status](https://travis-ci.org/connctd/kranen.svg?branch=master)](https://travis-ci.org/connctd/kranen)
 
 This tool allows you to easily create callback endpoints for Docker Hub.
 
