@@ -133,6 +133,7 @@ func TestSuccessfullCall(t *testing.T) {
 	testHook(wrongTagPayload, "foobaz", assert, http.StatusBadRequest)
 	testHook(successPayload, "wrongapikey", assert, http.StatusNotFound)
 	testHook(wrongNamePayload, "foobaz", assert, http.StatusBadRequest)
+	testHook("", "foobaz", assert, http.StatusBadRequest)
 }
 
 func testHook(payload, apikey string, assert *assert.Assertions, expectedStatusCode int) {
