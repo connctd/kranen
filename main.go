@@ -119,6 +119,8 @@ func hook(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.WriteHeader(http.StatusBadRequest)
 }
 
+var execCommand = exec.Command
+
 func executeScript(config RepoConfig, payload Payload) {
 	tpl, err := scripTemplate.Parse(config.Script)
 	if err != nil {
@@ -147,7 +149,7 @@ func executeScript(config RepoConfig, payload Payload) {
 	log.Printf("Executing %s", script)
 
 	args := strings.Split(script, " ")
-	scriptCommand := exec.Command(args[0], args[1:]...)
+	scriptCommand := execCommand(args[0], args[1:]...)
 	scriptCommand.Env = os.Environ()
 	// TODO wrap this in a nicer writer
 	scriptCommand.Stdout = os.Stdout
