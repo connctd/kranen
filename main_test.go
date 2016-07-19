@@ -43,6 +43,65 @@ var (
     "status": "Active"
   }
 }`
+
+	wrongTagPayload = `{
+  "callback_url": "https://registry.hub.docker.com/u/svendowideit/testhook/hook/2141b5bi5i5b02bec211i4eeih0242eg11000a/",
+  "push_data": {
+    "images": [
+        "27d47432a69bca5f2700e4dff7de0388ed65f9d3fb1ec645e2bc24c223dc1cc3",
+        "51a9c7c1f8bb2fa19bcd09789a34e63f35abb80044bc10196e304f6634cc582c",
+        "..."
+    ],
+    "pushed_at": 1.417566161e+09,
+    "pusher": "trustedbuilder",
+    "tag": "latest-dev"
+  },
+  "repository": {
+    "comment_count": "0",
+    "date_created": 1.417494799e+09,
+    "description": "",
+    "dockerfile": "irrelevant",
+    "is_official": false,
+    "is_private": true,
+    "is_trusted": true,
+    "name": "testhook",
+    "namespace": "connctd",
+    "owner": "connctd",
+    "repo_name": "connctd/test",
+    "repo_url": "https://registry.hub.docker.com/u/svendowideit/testhook/",
+    "star_count": 0,
+    "status": "Active"
+  }
+}`
+	wrongNamePayload = `{
+  "callback_url": "https://registry.hub.docker.com/u/svendowideit/testhook/hook/2141b5bi5i5b02bec211i4eeih0242eg11000a/",
+  "push_data": {
+    "images": [
+        "27d47432a69bca5f2700e4dff7de0388ed65f9d3fb1ec645e2bc24c223dc1cc3",
+        "51a9c7c1f8bb2fa19bcd09789a34e63f35abb80044bc10196e304f6634cc582c",
+        "..."
+    ],
+    "pushed_at": 1.417566161e+09,
+    "pusher": "trustedbuilder",
+    "tag": "latest"
+  },
+  "repository": {
+    "comment_count": "0",
+    "date_created": 1.417494799e+09,
+    "description": "",
+    "dockerfile": "irrelevant",
+    "is_official": false,
+    "is_private": true,
+    "is_trusted": true,
+    "name": "testhook",
+    "namespace": "connctd",
+    "owner": "connctd",
+    "repo_name": "connctd/bar",
+    "repo_url": "https://registry.hub.docker.com/u/svendowideit/testhook/",
+    "star_count": 0,
+    "status": "Active"
+  }
+}`
 )
 
 func fakeExecCommand(command string, args ...string) *exec.Cmd {
@@ -70,21 +129,28 @@ func TestSuccessfullCall(t *testing.T) {
 
 	execCommand = fakeExecCommand
 
+	testHook(successPayload, "foobaz", assert, http.StatusOK)
+	testHook(wrongTagPayload, "foobaz", assert, http.StatusBadRequest)
+	testHook(successPayload, "wrongapikey", assert, http.StatusNotFound)
+	testHook(wrongNamePayload, "foobaz", assert, http.StatusBadRequest)
+}
+
+func testHook(payload, apikey string, assert *assert.Assertions, expectedStatusCode int) {
 	request := &http.Request{}
 	bodyBuf := bytes.Buffer{}
-	bodyBuf.WriteString(successPayload)
+	bodyBuf.WriteString(payload)
 	request.Body = ioutil.NopCloser(&bodyBuf)
 	request.Method = "GET"
-	request.RequestURI = "/docker/foobaz"
+	request.RequestURI = fmt.Sprintf("/docker/%s", apikey)
 
 	apiKeyParam := httprouter.Param{
 		Key:   "apikey",
-		Value: "foobaz",
+		Value: apikey,
 	}
 	w := httptest.NewRecorder()
 	hook(w, request, httprouter.Params{apiKeyParam})
 	w.Flush()
-	assert.Equal(http.StatusOK, w.Code)
+	assert.Equal(expectedStatusCode, w.Code)
 }
 
 func TestHelperProcess(t *testing.T) {
