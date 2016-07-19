@@ -1,10 +1,12 @@
 language: go
 go:
 - 1.6
+
 script:
 - env GOOS=linux GOARCH=amd64 go build -o kranen-linux-amd64 github.com/connctd/kranen
 - env GOOS=linux GOARCH=386 go build -o kranen-linux-386 github.com/connctd/kranen
-- env GOOS=linux GOARCH=arm GOARM=5 go build -o kranen-linux-arm ggithub.com/connctd/kranen
+- env GOOS=linux GOARCH=arm GOARM=5 go build -o kranen-linux-arm github.com/connctd/kranen
+
 deploy:
   provider: releases
   api_key:
