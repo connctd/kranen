@@ -8,7 +8,7 @@ type PushData struct {
 }
 
 type Repository struct {
-	CommentCount string  `json:"comment_count"`
+	CommentCount int     `json:"comment_count"`
 	DateCreated  float64 `json:"date_created"`
 	Description  string
 	Dockerfile   string
