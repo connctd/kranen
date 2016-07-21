@@ -15,89 +15,77 @@ import (
 
 var (
 	successPayload = `{
-  "callback_url": "https://registry.hub.docker.com/u/svendowideit/testhook/hook/2141b5bi5i5b02bec211i4eeih0242eg11000a/",
+  "callback_url": "https://registry.hub.docker.com/u/connctd/gate/hook/25040jj1i4e2a4jc1ehbabb41hj45h0ef/",
   "push_data": {
-    "images": [
-        "27d47432a69bca5f2700e4dff7de0388ed65f9d3fb1ec645e2bc24c223dc1cc3",
-        "51a9c7c1f8bb2fa19bcd09789a34e63f35abb80044bc10196e304f6634cc582c",
-        "..."
-    ],
-    "pushed_at": 1.417566161e+09,
-    "pusher": "trustedbuilder",
+    "images": [],
+    "pushed_at": 1.469096372e+09,
+    "pusher": "connctddev",
     "tag": "latest"
   },
   "repository": {
-    "comment_count": "0",
-    "date_created": 1.417494799e+09,
+    "comment_count": 0,
+    "date_created": 1.465379301e+09,
     "description": "",
-    "dockerfile": "irrelevant",
+    "full_description": null,
     "is_official": false,
     "is_private": true,
-    "is_trusted": true,
-    "name": "testhook",
+    "is_trusted": false,
+    "name": "test",
     "namespace": "connctd",
     "owner": "connctd",
     "repo_name": "connctd/test",
-    "repo_url": "https://registry.hub.docker.com/u/svendowideit/testhook/",
+    "repo_url": "https://hub.docker.com/r/connctd/gate",
     "star_count": 0,
     "status": "Active"
   }
 }`
 
 	wrongTagPayload = `{
-  "callback_url": "https://registry.hub.docker.com/u/svendowideit/testhook/hook/2141b5bi5i5b02bec211i4eeih0242eg11000a/",
+  "callback_url": "https://registry.hub.docker.com/u/connctd/gate/hook/25040jj1i4e2a4jc1ehbabb41hj45h0ef/",
   "push_data": {
-    "images": [
-        "27d47432a69bca5f2700e4dff7de0388ed65f9d3fb1ec645e2bc24c223dc1cc3",
-        "51a9c7c1f8bb2fa19bcd09789a34e63f35abb80044bc10196e304f6634cc582c",
-        "..."
-    ],
-    "pushed_at": 1.417566161e+09,
-    "pusher": "trustedbuilder",
-    "tag": "latest-dev"
+    "images": [],
+    "pushed_at": 1.469096372e+09,
+    "pusher": "connctddev",
+    "tag": "latest-development"
   },
   "repository": {
-    "comment_count": "0",
-    "date_created": 1.417494799e+09,
+    "comment_count": 0,
+    "date_created": 1.465379301e+09,
     "description": "",
-    "dockerfile": "irrelevant",
+    "full_description": null,
     "is_official": false,
     "is_private": true,
-    "is_trusted": true,
-    "name": "testhook",
+    "is_trusted": false,
+    "name": "test",
     "namespace": "connctd",
     "owner": "connctd",
     "repo_name": "connctd/test",
-    "repo_url": "https://registry.hub.docker.com/u/svendowideit/testhook/",
+    "repo_url": "https://hub.docker.com/r/connctd/gate",
     "star_count": 0,
     "status": "Active"
   }
 }`
 	wrongNamePayload = `{
-  "callback_url": "https://registry.hub.docker.com/u/svendowideit/testhook/hook/2141b5bi5i5b02bec211i4eeih0242eg11000a/",
+  "callback_url": "https://registry.hub.docker.com/u/connctd/gate/hook/25040jj1i4e2a4jc1ehbabb41hj45h0ef/",
   "push_data": {
-    "images": [
-        "27d47432a69bca5f2700e4dff7de0388ed65f9d3fb1ec645e2bc24c223dc1cc3",
-        "51a9c7c1f8bb2fa19bcd09789a34e63f35abb80044bc10196e304f6634cc582c",
-        "..."
-    ],
-    "pushed_at": 1.417566161e+09,
-    "pusher": "trustedbuilder",
+    "images": [],
+    "pushed_at": 1.469096372e+09,
+    "pusher": "connctddev",
     "tag": "latest"
   },
   "repository": {
-    "comment_count": "0",
-    "date_created": 1.417494799e+09,
+    "comment_count": 0,
+    "date_created": 1.465379301e+09,
     "description": "",
-    "dockerfile": "irrelevant",
+    "full_description": null,
     "is_official": false,
     "is_private": true,
-    "is_trusted": true,
-    "name": "testhook",
+    "is_trusted": false,
+    "name": "bar",
     "namespace": "connctd",
     "owner": "connctd",
     "repo_name": "connctd/bar",
-    "repo_url": "https://registry.hub.docker.com/u/svendowideit/testhook/",
+    "repo_url": "https://hub.docker.com/r/connctd/gate",
     "star_count": 0,
     "status": "Active"
   }
