@@ -28,11 +28,18 @@ var (
 	configs []RepoConfig
 
 	scripTemplate = template.New("script")
+
+	executionChan chan ScriptCommand
 )
 
 type tplData struct {
 	ENV map[string]string
 	Hub Payload
+}
+
+type ScriptCommand struct {
+	Cmd         *exec.Cmd
+	CallbackURL string
 }
 
 func main() {
@@ -41,6 +48,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Can't load config: %+v", err)
 	}
+
+	executionChan = make(chan ScriptCommand)
+	go executeCommands()
+	defer close(executionChan)
 
 	router := httprouter.New()
 	router.POST("/docker/:apikey", hook)
@@ -59,6 +70,22 @@ func main() {
 	} else {
 		log.Printf("Now listening with HTTP on %s", *httpAddress)
 		log.Fatal(http.ListenAndServe(*httpAddress, router))
+	}
+}
+
+func executeCommands() {
+	for scriptCommand := range executionChan {
+		scriptCommand.Cmd.Stdout = os.Stdout
+		scriptCommand.Cmd.Stderr = os.Stderr
+		err := scriptCommand.Cmd.Run()
+		if err != nil {
+			log.Printf("Error running script: %+v", err)
+			continue
+		}
+		_, err = http.Get(scriptCommand.CallbackURL)
+		if err != nil {
+			log.Printf("Failed to call callback URL: %+v", err)
+		}
 	}
 }
 
@@ -152,15 +179,8 @@ func executeScript(config RepoConfig, payload Payload) {
 	scriptCommand := execCommand(args[0], args[1:]...)
 	scriptCommand.Env = os.Environ()
 	// TODO wrap this in a nicer writer
-	scriptCommand.Stdout = os.Stdout
-	scriptCommand.Stderr = os.Stderr
-	err = scriptCommand.Run()
-	if err != nil {
-		log.Printf("Error running script: %+v", err)
-		return
-	}
-	_, err = http.Get(payload.CallbackUrl)
-	if err != nil {
-		log.Printf("Failed to call callback URL: %+v", err)
+	executionChan <- ScriptCommand{
+		Cmd:         scriptCommand,
+		CallbackURL: payload.CallbackUrl,
 	}
 }
